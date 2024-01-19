@@ -1,7 +1,7 @@
 const defaults: ISwRuntimeOptions = {
   force: false,
   swDest: './sw.js',
-  updateViaCache: 'none',
+  updateViaCache: 'imports',
 };
 
 class SwRuntime {
@@ -68,33 +68,25 @@ class SwRuntime {
         function onUpdateStateChange() {
           switch (sw.state) {
             case 'redundant':
-              {
-                sendEvent('onUpdateFailed');
-                sw.onstatechange = null;
-              }
+              sendEvent('onUpdateFailed');
+              sw.onstatechange = null;
               break;
 
             case 'installing':
-              {
-                if (!ignoreInstalling) {
-                  sendEvent('onUpdating');
-                }
+              if (!ignoreInstalling) {
+                sendEvent('onUpdating');
               }
               break;
 
             case 'installed':
-              {
-                if (!ignoreWaiting) {
-                  sendEvent('onUpdateReady');
-                }
+              if (!ignoreWaiting) {
+                sendEvent('onUpdateReady');
               }
               break;
 
             case 'activated':
-              {
-                sendEvent('onUpdated');
-                sw.onstatechange = null;
-              }
+              sendEvent('onUpdated');
+              sw.onstatechange = null;
               break;
           }
         }
@@ -161,27 +153,21 @@ class SwRuntime {
     if (this.has()) {
       navigator.serviceWorker.getRegistration().then((registration) => {
         if (!registration) return;
-
         registration.update();
       });
     }
   }
 
-  applyUpdate(callback, errback?) {
-    if (this.has()) {
+  applyUpdate(): Promise<void> {
+    if (!this.has()) return Promise.resolve();
+    return new Promise((resolve, reject) => {
       navigator.serviceWorker.getRegistration().then((registration) => {
-        if (!registration || !registration.waiting) {
-          errback && errback();
-          return;
-        }
-
-        // skipWaiting 消息是由 Service Worker 规范定义的标准消息。
-        // 这是 Service Worker API 提供的一种机制，用于在安装阶段完成后立即激活新版本的 Service Worker。
-        registration.waiting.postMessage({ action: 'skipWaiting' });
-
-        callback && callback();
+        if (!registration || !registration.waiting) return reject();
+        // SKIP_WAITING：立即激活新版本的 Service Worker，与 workbox(sw.js) 里的 skipWaiting 一致
+        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        resolve();
       });
-    }
+    });
   }
 }
 

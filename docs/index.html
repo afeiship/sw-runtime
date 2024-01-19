@@ -22,8 +22,11 @@
         const swRuntime = new SwRuntime.default();
         swRuntime.install({
           onUpdateReady: function () {
-            nx.$memory = { hasUpdate: true };
             console.log('SW Event:', 'onUpdateReady');
+            setTimeout(function () {
+              console.log('SW Event:', 'applyUpdate');
+              swRuntime.applyUpdate();
+            }, 1000);
           },
         });
         console.log(swRuntime);

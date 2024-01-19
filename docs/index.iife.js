@@ -1,32 +1,34 @@
-"use strict";
+'use strict';
 var SwRuntime = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __export = (target, all) => {
-    for (var name in all)
-      __defProp(target, name, { get: all[name], enumerable: true });
+    for (var name in all) __defProp(target, name, { get: all[name], enumerable: true });
   };
   var __copyProps = (to, from, except, desc) => {
-    if (from && typeof from === "object" || typeof from === "function") {
+    if ((from && typeof from === 'object') || typeof from === 'function') {
       for (let key of __getOwnPropNames(from))
         if (!__hasOwnProp.call(to, key) && key !== except)
-          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+          __defProp(to, key, {
+            get: () => from[key],
+            enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+          });
     }
     return to;
   };
-  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, '__esModule', { value: true }), mod);
 
   // src/index.ts
   var src_exports = {};
   __export(src_exports, {
-    default: () => src_default
+    default: () => src_default,
   });
   var defaults = {
     force: false,
-    swDest: "./sw.js",
-    updateViaCache: "none"
+    swDest: './sw.js',
+    updateViaCache: 'imports',
   };
   var SwRuntime = class {
     constructor(inOptions) {
@@ -34,9 +36,14 @@ var SwRuntime = (() => {
     }
     has() {
       if (this.options.force) {
-        return "serviceWorker" in navigator;
+        return 'serviceWorker' in navigator;
       } else {
-        return "serviceWorker" in navigator && (window.location.protocol === "https:" || window.location.hostname === "localhost" || window.location.hostname.indexOf("127.") === 0);
+        return (
+          'serviceWorker' in navigator &&
+          (window.location.protocol === 'https:' ||
+            window.location.hostname === 'localhost' ||
+            window.location.hostname.indexOf('127.') === 0)
+        );
       }
     }
     install(inOptions) {
@@ -46,20 +53,19 @@ var SwRuntime = (() => {
           // 表示不更新任何资源。
           // 当 Service Worker 检测到更新时，它不会尝试获取新版本的任何资源。
           // 这个策略适用于希望手动控制资源更新的情况。
-          updateViaCache
+          updateViaCache,
         });
         const sendEvent = (event) => {
-          if (typeof inOptions[event] === "function") {
-            inOptions[event]({ source: "ServiceWorker" });
+          if (typeof inOptions[event] === 'function') {
+            inOptions[event]({ source: 'ServiceWorker' });
           }
         };
-        const handleUpdating = function(registration2) {
+        const handleUpdating = function (registration2) {
           const sw = registration2.installing || registration2.waiting;
           let ignoreInstalling;
           let ignoreWaiting;
           let stateChangeHandler;
-          if (!sw || sw.onstatechange)
-            return;
+          if (!sw || sw.onstatechange) return;
           if (registration2.active) {
             onUpdateStateChange();
             stateChangeHandler = onUpdateStateChange;
@@ -74,61 +80,54 @@ var SwRuntime = (() => {
           sw.onstatechange = stateChangeHandler;
           function onUpdateStateChange() {
             switch (sw.state) {
-              case "redundant":
-                {
-                  sendEvent("onUpdateFailed");
-                  sw.onstatechange = null;
+              case 'redundant':
+                sendEvent('onUpdateFailed');
+                sw.onstatechange = null;
+                break;
+              case 'installing':
+                if (!ignoreInstalling) {
+                  sendEvent('onUpdating');
                 }
                 break;
-              case "installing":
-                {
-                  if (!ignoreInstalling) {
-                    sendEvent("onUpdating");
-                  }
+              case 'installed':
+                if (!ignoreWaiting) {
+                  sendEvent('onUpdateReady');
                 }
                 break;
-              case "installed":
-                {
-                  if (!ignoreWaiting) {
-                    sendEvent("onUpdateReady");
-                  }
-                }
-                break;
-              case "activated":
-                {
-                  sendEvent("onUpdated");
-                  sw.onstatechange = null;
-                }
+              case 'activated':
+                sendEvent('onUpdated');
+                sw.onstatechange = null;
                 break;
             }
           }
           function onInstallStateChange() {
             switch (sw.state) {
-              case "redundant":
+              case 'redundant':
                 sw.onstatechange = null;
                 break;
-              case "installing":
+              case 'installing':
                 break;
-              case "installed":
+              case 'installed':
                 break;
-              case "activated":
-                sendEvent("onInstalled");
+              case 'activated':
+                sendEvent('onInstalled');
                 sw.onstatechange = null;
                 break;
             }
           }
         };
-        registration.then(function(reg) {
-          if (!reg)
-            return;
-          handleUpdating(reg);
-          reg.onupdatefound = function() {
+        registration
+          .then(function (reg) {
+            if (!reg) return;
             handleUpdating(reg);
-          };
-        }).catch(function(err) {
-          sendEvent("onError");
-          return Promise.reject(err);
-        });
+            reg.onupdatefound = function () {
+              handleUpdating(reg);
+            };
+          })
+          .catch(function (err) {
+            sendEvent('onError');
+            return Promise.reject(err);
+          });
       }
     }
     uninstall() {
@@ -143,23 +142,20 @@ var SwRuntime = (() => {
     update() {
       if (this.has()) {
         navigator.serviceWorker.getRegistration().then((registration) => {
-          if (!registration)
-            return;
+          if (!registration) return;
           registration.update();
         });
       }
     }
-    applyUpdate(callback, errback) {
-      if (this.has()) {
+    applyUpdate() {
+      if (!this.has()) return Promise.resolve();
+      return new Promise((resolve, reject) => {
         navigator.serviceWorker.getRegistration().then((registration) => {
-          if (!registration || !registration.waiting) {
-            errback && errback();
-            return;
-          }
-          registration.waiting.postMessage({ action: "skipWaiting" });
-          callback && callback();
+          if (!registration || !registration.waiting) return reject();
+          registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+          resolve();
         });
-      }
+      });
     }
   };
   var src_default = SwRuntime;
