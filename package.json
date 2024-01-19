@@ -8,7 +8,8 @@
   "scripts": {
     "build": "tsup",
     "test": "jest",
-    "release": "release-it"
+    "release": "release-it",
+    "build:sw": "workbox generateSW workbox-config.js"
   },
   "license": "MIT",
   "devDependencies": {

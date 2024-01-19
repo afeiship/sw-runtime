@@ -1,7 +1,7 @@
 interface ISwRuntimeOptions {
   force?: boolean;
   swDest?: string;
-  updateViaCache: 'none' | 'imports' | 'all';
+  updateViaCache?: 'none' | 'imports' | 'all';
 }
 
 interface InstallOptions {

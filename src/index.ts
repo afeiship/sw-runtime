@@ -1,6 +1,5 @@
 const defaults: ISwRuntimeOptions = {
   force: false,
-  autoUpdate: false,
   swDest: './sw.js',
   updateViaCache: 'none',
 };
@@ -12,7 +11,7 @@ class SwRuntime {
     this.options = { ...defaults, ...inOptions };
   }
 
-  hasSw() {
+  has() {
     if (this.options.force) {
       return 'serviceWorker' in navigator;
     } else {
@@ -28,16 +27,16 @@ class SwRuntime {
   install(inOptions: InstallOptions) {
     const { updateViaCache } = this.options;
     if (this.has()) {
-      const registration = navigator.serviceWorker.register(this.options.swDest, {
+      const registration = navigator.serviceWorker.register(this.options.swDest!, {
         // 表示不更新任何资源。
         // 当 Service Worker 检测到更新时，它不会尝试获取新版本的任何资源。
         // 这个策略适用于希望手动控制资源更新的情况。
         updateViaCache,
       });
 
-      const sendEvent = function (event) {
+      const sendEvent = (event) => {
         if (typeof inOptions[event] === 'function') {
-          options[event]({ source: 'ServiceWorker' });
+          inOptions[event]({ source: 'ServiceWorker' });
         }
       };
 
