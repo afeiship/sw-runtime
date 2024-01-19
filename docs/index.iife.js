@@ -32,7 +32,10 @@ var SwRuntime = (() => {
     onAutoUpdate: () => {
     }
   };
-  var SwRuntime = class {
+  var SwRuntime = class _SwRuntime {
+    get supportSw() {
+      return "serviceWorker" in navigator;
+    }
     constructor(inOptions) {
       this.options = { ...defaults, ...inOptions };
       this.checkAutoUpdate();
@@ -43,14 +46,14 @@ var SwRuntime = (() => {
         return;
       setInterval(() => {
         this.update();
-        onAutoUpdate();
+        onAutoUpdate({ context: this });
       }, autoUpdateInterval);
     }
     has() {
       if (this.options.force) {
-        return "serviceWorker" in navigator;
+        return this.supportSw;
       } else {
-        return "serviceWorker" in navigator && (window.location.protocol === "https:" || window.location.hostname === "localhost" || window.location.hostname.indexOf("127.") === 0);
+        return this.supportSw && (window.location.protocol === "https:" || window.location.hostname === "localhost" || window.location.hostname.indexOf("127.") === 0);
       }
     }
     install(inOptions) {
@@ -64,7 +67,7 @@ var SwRuntime = (() => {
         });
         const sendEvent = (event) => {
           if (typeof inOptions[event] === "function") {
-            inOptions[event]({ source: "ServiceWorker" });
+            inOptions[event]({ context: this });
           }
         };
         const handleUpdating = function(registration2) {
@@ -166,6 +169,27 @@ var SwRuntime = (() => {
           resolve();
         });
       });
+    }
+    static install(inOptions) {
+      const {
+        force,
+        swDest,
+        updateViaCache,
+        autoUpdate,
+        autoUpdateInterval,
+        onAutoUpdate,
+        ...installOptions
+      } = { ...defaults, ...inOptions };
+      const swRuntime = new _SwRuntime({
+        force,
+        swDest,
+        updateViaCache,
+        autoUpdate,
+        autoUpdateInterval,
+        onAutoUpdate
+      });
+      swRuntime.install(installOptions);
+      return swRuntime;
     }
   };
   var src_default = SwRuntime;

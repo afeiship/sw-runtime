@@ -13,9 +13,16 @@ npm install @jswork/sw-runtime
 
 ## usage
 ```js
-import swRuntime from '@jswork/sw-runtime';
+import SwRuntime from '@jswork/sw-runtime';
 
-// usage goes here.
+// App Did Mount, config sw
+SwRuntime.install({
+  autoUpdate: true,
+  autoUpdateInterval: 10 * 1000,
+  onAutoUpdate: () => {
+    console.log('onAuotUpdate called.');
+  },
+});
 ```
 
 ## types

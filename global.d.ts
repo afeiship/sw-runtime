@@ -1,10 +1,18 @@
+type HandlerEvent = {
+  context: any;
+};
+
+interface NxStatic {
+  $sw: any;
+}
+
 interface ISwRuntimeOptions {
   force?: boolean;
   swDest?: string;
   updateViaCache?: 'none' | 'imports' | 'all';
   autoUpdate?: boolean;
   autoUpdateInterval?: number;
-  onAutoUpdate?: () => void;
+  onAutoUpdate?: (event: HandlerEvent) => void;
 }
 
 interface InstallOptions {
@@ -14,7 +22,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onInstalled?: () => void;
+  onInstalled?: (event: HandlerEvent) => void;;
 
   /**
    * Not supported for AppCache.
@@ -23,7 +31,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdating?: () => void;
+  onUpdating?: (event: HandlerEvent) => void;;
 
   /**
    * Event called when onUpdating phase finished.
@@ -32,7 +40,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdateReady?: () => void;
+  onUpdateReady?: (event: HandlerEvent) => void;;
 
   /**
    * Event called when upUpdating phase failed by some reason.
@@ -41,7 +49,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdateFailed?: () => void;
+  onUpdateFailed?: (event: HandlerEvent) => void;;
 
   /**
    * Event called when update is applied,
@@ -50,5 +58,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdated?: () => void;
+  onUpdated?: (event: HandlerEvent) => void;;
 }
+
+type InstallRuntimeOptions = ISwRuntimeOptions & InstallOptions;

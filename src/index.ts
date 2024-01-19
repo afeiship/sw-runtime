@@ -10,6 +10,10 @@ const defaults: ISwRuntimeOptions = {
 class SwRuntime {
   private options: ISwRuntimeOptions;
 
+  get supportSw() {
+    return 'serviceWorker' in navigator;
+  }
+
   constructor(inOptions: ISwRuntimeOptions) {
     this.options = { ...defaults, ...inOptions };
     this.checkAutoUpdate();
@@ -20,16 +24,16 @@ class SwRuntime {
     if (!autoUpdate) return;
     setInterval(() => {
       this.update();
-      onAutoUpdate!();
+      onAutoUpdate!({ context: this });
     }, autoUpdateInterval);
   }
 
   has() {
     if (this.options.force) {
-      return 'serviceWorker' in navigator;
+      return this.supportSw;
     } else {
       return (
-        'serviceWorker' in navigator &&
+        this.supportSw &&
         (window.location.protocol === 'https:' ||
           window.location.hostname === 'localhost' ||
           window.location.hostname.indexOf('127.') === 0)
@@ -49,7 +53,7 @@ class SwRuntime {
 
       const sendEvent = (event) => {
         if (typeof inOptions[event] === 'function') {
-          inOptions[event]({ source: 'ServiceWorker' });
+          inOptions[event]({ context: this });
         }
       };
 
@@ -181,6 +185,30 @@ class SwRuntime {
         resolve();
       });
     });
+  }
+
+  public static install(inOptions: InstallRuntimeOptions) {
+    const {
+      force,
+      swDest,
+      updateViaCache,
+      autoUpdate,
+      autoUpdateInterval,
+      onAutoUpdate,
+      ...installOptions
+    } = { ...defaults, ...inOptions };
+
+    const swRuntime = new SwRuntime({
+      force,
+      swDest,
+      updateViaCache,
+      autoUpdate,
+      autoUpdateInterval,
+      onAutoUpdate,
+    });
+
+    swRuntime.install(installOptions);
+    return swRuntime;
   }
 }
 
