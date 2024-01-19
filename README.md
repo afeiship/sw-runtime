@@ -16,19 +16,28 @@ npm install @jswork/sw-runtime
 import SwRuntime from '@jswork/sw-runtime';
 
 // App Did Mount, config sw
-SwRuntime.install({
-  autoUpdate: true,
-  autoUpdateInterval: 10 * 1000,
-  onAutoUpdate: () => {
-    console.log('onAuotUpdate called.');
-  },
-});
+window.onload = function () {
+  SwRuntime.install({
+    autoUpdate: true,
+    autoUpdateInterval: 5 * 1000,
+    onAutoUpdate: function () {
+      console.log('SW Event:', 'onAutoUpdate');
+    },
+    onUpdateReady: function ({ context }) {
+      console.log('SW Event:', 'onUpdateReady');
+      setTimeout(function () {
+        console.log('SW Event:', 'do applyUpdate');
+        // Need to reload page, or it will be pending.
+        context.applyUpdate();
+      }, 1000);
+    },
+  });
+};
 ```
 
-## types
-```ts
-/// <reference types="@jswork/sw-runtime/global.d.ts" />
-```
+## todos
+1. unpkg/jsdelivr cdn zero cache?(not ok)
+2. auto update interval(ok)
 
 ## license
 Code released under [the MIT license](https://github.com/afeiship/sw-runtime/blob/master/LICENSE.txt).
