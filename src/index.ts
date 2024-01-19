@@ -1,7 +1,7 @@
 const defaults: ISwRuntimeOptions = {
   force: false,
   swDest: './sw.js',
-  updateViaCache: 'imports',
+  updateViaCache: 'none',
   autoUpdate: false,
   autoUpdateInterval: 60 * 1000,
   onAutoUpdate: () => {},

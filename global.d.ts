@@ -2,6 +2,8 @@ type HandlerEvent = {
   context: any;
 };
 
+type InstallRuntimeOptions = ISwRuntimeOptions & InstallOptions;
+
 interface NxStatic {
   $sw: any;
 }
@@ -60,5 +62,3 @@ interface InstallOptions {
    */
   onUpdated?: (event: HandlerEvent) => void;;
 }
-
-type InstallRuntimeOptions = ISwRuntimeOptions & InstallOptions;
