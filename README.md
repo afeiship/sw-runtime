@@ -28,7 +28,9 @@ window.onload = function () {
       setTimeout(function () {
         console.log('SW Event:', 'do applyUpdate');
         // Need to reload page, or it will be pending.
-        context.applyUpdate();
+        context.applyUpdate().then(()=>{
+          window.location.reload();
+        });
       }, 1000);
     },
   });
