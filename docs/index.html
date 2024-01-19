@@ -19,7 +19,13 @@
 
     <script>
       window.onload = function () {
-        const swRuntime = new SwRuntime.default();
+        const swRuntime = new SwRuntime.default({
+          autoUpdate: true,
+          autoUpdateInterval: 5 * 1000,
+          onAutoUpdate: function () {
+            console.log('SW Event:', 'onAutoUpdate');
+          },
+        });
         swRuntime.install({
           onUpdateReady: function () {
             console.log('SW Event:', 'onUpdateReady');

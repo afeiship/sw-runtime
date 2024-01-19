@@ -1,1 +1,1 @@
-console.log('from a21.js');
+console.log('from a21 autoupdate.js');

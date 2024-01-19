@@ -2,6 +2,9 @@ const defaults: ISwRuntimeOptions = {
   force: false,
   swDest: './sw.js',
   updateViaCache: 'imports',
+  autoUpdate: false,
+  autoUpdateInterval: 60 * 1000,
+  onAutoUpdate: () => {},
 };
 
 class SwRuntime {
@@ -9,6 +12,16 @@ class SwRuntime {
 
   constructor(inOptions: ISwRuntimeOptions) {
     this.options = { ...defaults, ...inOptions };
+    this.checkAutoUpdate();
+  }
+
+  checkAutoUpdate() {
+    const { autoUpdate, autoUpdateInterval, onAutoUpdate } = this.options;
+    if (!autoUpdate) return;
+    setInterval(() => {
+      this.update();
+      onAutoUpdate!();
+    }, autoUpdateInterval);
   }
 
   has() {

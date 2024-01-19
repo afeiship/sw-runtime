@@ -2,6 +2,9 @@ interface ISwRuntimeOptions {
   force?: boolean;
   swDest?: string;
   updateViaCache?: 'none' | 'imports' | 'all';
+  autoUpdate?: boolean;
+  autoUpdateInterval?: number;
+  onAutoUpdate?: () => void;
 }
 
 interface InstallOptions {
