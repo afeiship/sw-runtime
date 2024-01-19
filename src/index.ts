@@ -1,8 +1,8 @@
 const defaults: ISwRuntimeOptions = {
   force: false,
-  events: false,
   autoUpdate: false,
   swDest: './sw.js',
+  updateViaCache: 'none',
 };
 
 class SwRuntime {
@@ -26,25 +26,29 @@ class SwRuntime {
   }
 
   install(inOptions: InstallOptions) {
-    const { events } = this.options;
+    const { updateViaCache } = this.options;
     if (this.has()) {
       const registration = navigator.serviceWorker.register(this.options.swDest, {
-        scope: '/',
         // 表示不更新任何资源。
         // 当 Service Worker 检测到更新时，它不会尝试获取新版本的任何资源。
         // 这个策略适用于希望手动控制资源更新的情况。
-        updateViaCache: 'none',
+        updateViaCache,
       });
 
-      var handleUpdating = function (registration) {
-        var sw = registration.installing || registration.waiting;
-        var ignoreInstalling;
-        var ignoreWaiting;
+      const sendEvent = function (event) {
+        if (typeof inOptions[event] === 'function') {
+          options[event]({ source: 'ServiceWorker' });
+        }
+      };
+
+      const handleUpdating = function (registration) {
+        const sw = registration.installing || registration.waiting;
+        let ignoreInstalling;
+        let ignoreWaiting;
+        let stateChangeHandler;
 
         // No SW or already handled
         if (!sw || sw.onstatechange) return;
-
-        var stateChangeHandler;
 
         // Already has SW
         if (registration.active) {
@@ -99,37 +103,23 @@ class SwRuntime {
         function onInstallStateChange() {
           switch (sw.state) {
             case 'redundant':
-              {
-                // Failed to install, ignore
-                sw.onstatechange = null;
-              }
+              // Failed to install, ignore
+              sw.onstatechange = null;
               break;
 
             case 'installing':
-              {
-                // Installing, ignore
-              }
+              // Installing, ignore
               break;
 
             case 'installed':
-              {
-                // Installed, wait activation
-              }
+              // Installed, wait activation
               break;
 
             case 'activated':
-              {
-                sendEvent('onInstalled');
-                sw.onstatechange = null;
-              }
+              sendEvent('onInstalled');
+              sw.onstatechange = null;
               break;
           }
-        }
-      };
-
-      var sendEvent = function (event) {
-        if (typeof inOptions[event] === 'function') {
-          options[event]({ source: 'ServiceWorker' });
         }
       };
 
@@ -186,6 +176,8 @@ class SwRuntime {
           return;
         }
 
+        // skipWaiting 消息是由 Service Worker 规范定义的标准消息。
+        // 这是 Service Worker API 提供的一种机制，用于在安装阶段完成后立即激活新版本的 Service Worker。
         registration.waiting.postMessage({ action: 'skipWaiting' });
 
         callback && callback();
