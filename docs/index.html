@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./static/css/reset.css" />
     <link rel="stylesheet" href="./static/css/s1.css" />
     <link rel="stylesheet" href="./static/css/s2.css" />
+    <script src="./index.iife.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jswork/next"></script>
   </head>
 
@@ -15,5 +16,18 @@
     <script src="./static/js/main.js"></script>
     <script src="./static/js/a1.js"></script>
     <script src="./static/js/a2.js"></script>
+
+    <script>
+      window.onload = function () {
+        const swRuntime = new SwRuntime.default();
+        swRuntime.install({
+          onUpdateReady: function () {
+            nx.$memory = { hasUpdate: true };
+            console.log('SW Event:', 'onUpdateReady');
+          },
+        });
+        console.log(swRuntime);
+      };
+    </script>
   </body>
 </html>

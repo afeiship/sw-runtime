@@ -4,6 +4,8 @@ module.exports = {
   globPatterns: ['**/*.{html,css,js,txt}'],
   swDest: 'docs/sw.js',
   ignoreURLParametersMatching: [/^utm_/, /^fbclid$/],
+  skipWaiting: false,
+  clientsClaim: false,
   // https://cdn.jsdelivr.net/npm/@jswork/next
   // runtime for cdn.jsdelivr.net
   runtimeCaching: [
