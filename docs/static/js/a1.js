@@ -1,1 +1,1 @@
-console.log('from a123456 autoupdate.js');
+console.log('from a123 autoupdate.js');

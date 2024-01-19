@@ -26,7 +26,7 @@ var SwRuntime = (() => {
   var defaults = {
     force: false,
     swDest: "./sw.js",
-    updateViaCache: "imports",
+    updateViaCache: "none",
     autoUpdate: false,
     autoUpdateInterval: 60 * 1e3,
     onAutoUpdate: () => {
