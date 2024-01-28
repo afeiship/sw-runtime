@@ -195,6 +195,7 @@ class SwRuntime {
   public static install(inOptions: InstallRuntimeOptions) {
     const {
       force,
+      disabled,
       swDest,
       updateViaCache,
       autoUpdate,
@@ -205,6 +206,7 @@ class SwRuntime {
 
     const swRuntime = new SwRuntime({
       force,
+      disabled,
       swDest,
       updateViaCache,
       autoUpdate,
