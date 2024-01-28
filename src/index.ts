@@ -23,6 +23,8 @@ class SwRuntime {
   checkAutoUpdate() {
     const { autoUpdate, autoUpdateInterval, onAutoUpdate } = this.options;
     if (!autoUpdate) return;
+    if(!this.has()) return;
+
     setInterval(() => {
       this.update();
       onAutoUpdate!({ context: this });
