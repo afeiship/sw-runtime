@@ -1,5 +1,6 @@
 const defaults: ISwRuntimeOptions = {
   force: false,
+  disabled: false,
   swDest: './sw.js',
   updateViaCache: 'none',
   autoUpdate: false,
@@ -29,6 +30,8 @@ class SwRuntime {
   }
 
   has() {
+    if(this.options.disabled) return false;
+
     if (this.options.force) {
       return this.supportSw;
     } else {
