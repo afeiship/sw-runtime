@@ -10,6 +10,7 @@ interface NxStatic {
 
 interface ISwRuntimeOptions {
   force?: boolean;
+  disabled?: boolean;
   swDest?: string;
   updateViaCache?: 'none' | 'imports' | 'all';
   autoUpdate?: boolean;
