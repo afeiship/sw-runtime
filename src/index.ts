@@ -186,7 +186,7 @@ class SwRuntime {
       navigator.serviceWorker.getRegistration().then((registration) => {
         if (!registration || !registration.waiting) return reject();
         // SKIP_WAITING：立即激活新版本的 Service Worker，与 workbox(sw.js) 里的 skipWaiting 一致
-        registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
         resolve();
       });
     });
