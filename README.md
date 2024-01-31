@@ -11,6 +11,31 @@
 npm install @jswork/sw-runtime
 ```
 
+## skipWaiting
+```js
+// case1: skipWaiting true: will be update immediately
+module.exports = {
+  maximumFileSizeToCacheInBytes: 100 * 1024 * 1024,
+  globDirectory: 'build/',
+  globPatterns: ['**/*.{js,png,json,txt,css,map}'],
+  globIgnores: ['*/fallback.js'],
+  skipWaiting: true,
+  clientsClaim: true,
+  //...
+};
+
+// case2: skipWaiting false: will be update when you click sw-tips `reload` button
+module.exports = {
+  maximumFileSizeToCacheInBytes: 100 * 1024 * 1024,
+  globDirectory: 'build/',
+  globPatterns: ['**/*.{js,png,json,txt,css,map}'],
+  globIgnores: ['*/fallback.js'],
+  skipWaiting: false,
+  clientsClaim: false,
+  //...
+};
+```
+
 ## usage
 ```js
 import SwRuntime from '@jswork/sw-runtime';
