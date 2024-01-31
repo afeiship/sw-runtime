@@ -1,7 +1,7 @@
 {
   "name": "@jswork/sw-runtime",
   "version": "1.0.7",
-  "description": "Service worker runtime.",
+  "description": "Service worker runtime for workbox.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "typings": "dist/index.d.ts",
@@ -28,14 +28,5 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {},
-  "keywords": [
-    "active",
-    "cache",
-    "cli",
-    "install",
-    "pwa",
-    "service-worker",
-    "sw",
-    "workbox"
-  ]
+  "keywords": ["active", "cache", "cli", "install", "pwa", "service-worker", "sw", "workbox"]
 }

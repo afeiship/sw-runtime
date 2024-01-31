@@ -1,5 +1,5 @@
 # sw-runtime
-> Service worker runtime.
+> Service worker runtime for workbox.
 
 [![version][version-image]][version-url]
 [![license][license-image]][license-url]
