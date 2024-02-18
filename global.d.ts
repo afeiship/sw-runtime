@@ -25,7 +25,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onInstalled?: (event: HandlerEvent) => void;;
+  onInstalled?: (event: HandlerEvent) => void;
 
   /**
    * Not supported for AppCache.
@@ -34,7 +34,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdating?: (event: HandlerEvent) => void;;
+  onUpdating?: (event: HandlerEvent) => void;
 
   /**
    * Event called when onUpdating phase finished.
@@ -43,7 +43,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdateReady?: (event: HandlerEvent) => void;;
+  onUpdateReady?: (event: HandlerEvent) => void;
 
   /**
    * Event called when upUpdating phase failed by some reason.
@@ -52,7 +52,7 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdateFailed?: (event: HandlerEvent) => void;;
+  onUpdateFailed?: (event: HandlerEvent) => void;
 
   /**
    * Event called when update is applied,
@@ -61,5 +61,5 @@ interface InstallOptions {
    *
    * @memberOf InstallOptions
    */
-  onUpdated?: (event: HandlerEvent) => void;;
+  onUpdated?: (event: HandlerEvent) => void;
 }
