@@ -23,7 +23,7 @@ class SwRuntime {
   checkAutoUpdate() {
     const { autoUpdate, autoUpdateInterval, onAutoUpdate } = this.options;
     if (!autoUpdate) return;
-    if(!this.has()) return;
+    if (!this.has()) return;
 
     setInterval(() => {
       this.update();
@@ -32,7 +32,7 @@ class SwRuntime {
   }
 
   has() {
-    if(this.options.disabled) return false;
+    if (this.options.disabled) return false;
 
     if (this.options.force) {
       return this.supportSw;
@@ -184,7 +184,7 @@ class SwRuntime {
     if (!this.has()) return Promise.resolve();
     return new Promise((resolve, reject) => {
       navigator.serviceWorker.getRegistration().then((registration) => {
-        if (!registration || !registration.waiting) return;
+        if (!registration || !registration.waiting) return Promise.resolve();
         // SKIP_WAITING：立即激活新版本的 Service Worker，与 workbox(sw.js) 里的 skipWaiting 一致
         registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
         resolve();
