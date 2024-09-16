@@ -182,7 +182,7 @@ class SwRuntime {
 
   applyUpdate(): Promise<void> {
     if (!this.has()) return Promise.resolve();
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       navigator.serviceWorker.getRegistration().then((registration) => {
         if (!registration || !registration.waiting) return Promise.resolve();
         // SKIP_WAITING：立即激活新版本的 Service Worker，与 workbox(sw.js) 里的 skipWaiting 一致
